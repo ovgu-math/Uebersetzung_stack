@@ -33,7 +33,7 @@ for filename in filenames:
         deli=line1[4]
     elif line1[1:].startswith('sep='):
         deli=line1[5]
-    else
+    else:
         print("Fehler")
     
     
