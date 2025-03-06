@@ -61,15 +61,19 @@ for filename in filenames:
     for text in texte:
         if text.text:
             orig=text.text
+            textA="<text>![CDATA["+orig+"]]></text>"
+            textB="<text>"+orig+"</text>"
 
-            if orig not in inhalt:
-                print(f"Potentieller Fehler bei Nummer: ###{number+1}###")
-                # print(orig)
-                # print("")
-                continue
+            if textA in inhalt:
+                t=textA
+            elif textB in inhalt:
+                t=textB
             else:
-                number+=1
-                inhalt=inhalt.replace(orig,"###"+str(number)+"###",1)
+                print(f"Fehler bei Nummer: ###{number+1}###")
+                continue
+            
+            number+=1
+            inhalt=inhalt.replace(t,"<text>![CDATA[###"+str(number)+"###]]></text>",1)
             text.text='<span class="multilang" lang="de">'+orig+'</span>'
             soup = BeautifulSoup(text.text,'html.parser')
             spans = soup.findAll("span",{"class":"multilang"})
