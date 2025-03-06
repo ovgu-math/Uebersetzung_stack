@@ -61,7 +61,7 @@ for filename in filenames:
     for text in texte:
         if text.text:
             orig=text.text
-            textA="<text>![CDATA["+orig+"]]></text>"
+            textA="<text><![CDATA["+orig+"]]></text>"
             textB="<text>"+orig+"</text>"
 
             if textA in inhalt:
@@ -73,7 +73,7 @@ for filename in filenames:
                 continue
             
             number+=1
-            inhalt=inhalt.replace(t,"<text>![CDATA[###"+str(number)+"###]]></text>",1)
+            inhalt=inhalt.replace(t,"<text><![CDATA[###"+str(number)+"###]]></text>",1)
             text.text='<span class="multilang" lang="de">'+orig+'</span>'
             soup = BeautifulSoup(text.text,'html.parser')
             spans = soup.findAll("span",{"class":"multilang"})
@@ -101,8 +101,8 @@ for filename in filenames:
     csvfile.close()
 
     templatefile=open(filename+'.template','w',encoding='utf8')
-    inhalt=inhalt.replace('<text>###','<text><![CDATA[###')
-    inhalt=inhalt.replace('###</text>','###]]></text>')
+    # inhalt=inhalt.replace('<text>###','<text><![CDATA[###')
+    # inhalt=inhalt.replace('###</text>','###]]></text>')
     templatefile.write(inhalt)
     templatefile.close()
 
