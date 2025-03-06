@@ -6,7 +6,8 @@ from lxml import etree as ET
 from bs4 import BeautifulSoup
 import csv
 from bs4.formatter import HTMLFormatter
-import os.path;
+import os.path
+import sys
 
 class UnsortedAttributes(HTMLFormatter):
     def attributes(self, tag):
@@ -17,6 +18,9 @@ class UnsortedAttributes(HTMLFormatter):
 
 filenames=glob.glob('*.xml')
 fieldnames=["Nummer","de","en"]
+
+sourceLang=sys.argv[1] if len(sys.argv)>1 and sys.argv[1] in ["de","en"] else "de"
+print("Übersetzung von "+sourceLang)
 
 for filename in filenames:
     if filename.endswith("_new.xml"):
@@ -36,11 +40,12 @@ for filename in filenames:
     infile.close()
 
     categories=[i.text for i in root.findall('.//question[@type="category"]/category/text')]
-    category=os.path.commonpath(categories)
-    print(f"Neue Fragen stehen unter: {category}/übersetzt")
+    if categories:
+        category=os.path.commonpath(categories)
+        print(f"Neue Fragen stehen unter: {category}/übersetzt")
     
-    inhalt=inhalt.replace(category,category+"/übersetzt")
-    inhalt=inhalt.replace('<quiz>',f"""<quiz>
+        inhalt=inhalt.replace(category,category+"/übersetzt")
+        inhalt=inhalt.replace('<quiz>',f"""<quiz>
 <!-- question: 0  -->
   <question type="category">
     <category>
@@ -86,11 +91,14 @@ for filename in filenames:
     number=0
     for group in groups:
         number+=1
-        zeile={'de':texts[number-1]}
+        zeile={sourceLang:texts[number-1]}
         zeile['Nummer']='###'+str(number)+'###'
         writer.writerow(zeile)
     csvfile.close()
 
     templatefile=open(filename+'.template','w',encoding='utf8')
+    inhalt=inhalt.replace('<text>###','<text><![CDATA[###')
+    inhalt=inhalt.replace('###</text>','###]]></text>')
     templatefile.write(inhalt)
     templatefile.close()
+

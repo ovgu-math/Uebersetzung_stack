@@ -149,6 +149,13 @@ def readd_latex(r):
 lt = LibreTranslateAPI("http://127.0.0.1:5000")
 filenames=glob.glob('*.csv')
 fieldnames=['Nummer',"de","en"]
+
+sourceLang=sys.argv[1] if len(sys.argv)>1 and sys.argv[1] in ["de","en"] else "de"
+targetLang="en" if sourceLang=="de" else "de"
+print("Übersetzung von "+sourceLang+" zu "+targetLang)
+
+
+
 for filename in filenames:
     zeilen=[]
     if os.path.isfile(filename+".progress"):
@@ -194,23 +201,23 @@ for filename in filenames:
     # print(lt.translate("Øving", "no", "de"))
     print(f"Gesamtzahl {len(zeilen)}")
     for zeile in zeilen:
-        if not zeile['en']:
+        if not zeile[targetLang]:
             en=""
             sys.stdout.write(f" Nummer: {zeile['Nummer']}\r")
             sys.stdout.flush()
-            o=rm_latex(zeile['de']);
+            o=rm_latex(zeile[sourceLang]);
         
             dbg=o
             de=o['s']
             if o['s']:
-                o['s']=lt.translate(o['s'], "de", "en")
+                o['s']=lt.translate(o['s'], sourceLang, targetLang)
             en=readd_latex(o)
             if not en:
                 o['s']='Translation Error\n'+de
                 en=readd_latex(o)
                 print(f"Fehler bei der Übersetzung von Nummer: {zeile['Nummer']}")
                 
-            zeile['en']=en
+            zeile[targetLang]=en
         writer.writerow(zeile)
     csvfile.close()
 
