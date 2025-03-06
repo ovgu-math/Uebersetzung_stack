@@ -31,6 +31,10 @@ for filename in filenames:
         csvfile.seek(0)
     elif line1.startswith('sep='):
         deli=line1[4]
+    elif line1[1:].startswith('sep='):
+        deli=line1[5]
+    else
+        print("Fehler")
     
     
     #encoding="ISO-8859-1")
