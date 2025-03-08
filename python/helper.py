@@ -1,6 +1,10 @@
 import subprocess
+import os
+import sys
+path=os.path.split(os.path.abspath(sys.argv[0]))[0]
 
 def pe(c,a=""):
+    c=os.path.join(path,c)
     print("> python "+c+" "+a)
     if not a:
         subprocess.run(["python",c])
