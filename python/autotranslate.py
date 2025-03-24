@@ -220,6 +220,7 @@ for filename in filenames:
             zeile[targetLang]=en
         writer.writerow(zeile)
     csvfile.close()
+    print("")
 
     shutil.copy(filename+".progress",filename)    
     
