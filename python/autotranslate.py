@@ -177,20 +177,24 @@ for filename in filenames:
     elif line1.startswith('sep='):
         deli=line1[4]
     else:
-        deli=' '
-        print("Delimiter konnte nicht bestimmt werden")
-    
+        print(f"{filename} wird übersprungen")
+        continue    
     
     #encoding="ISO-8859-1")
     reader = csv.DictReader(csvfile, delimiter=deli)
     i=len(zeilen)
+    any=False
     for zeile in reader:
         if i>0:
             i=i-1
             continue
         zeilen.append(zeile)
+        any=True
     csvfile.close()
-
+    
+    if not any:
+        print(f"{filename} wird übersprungen")
+        continue    
     
     
     csvfile=open(filename+".progress",'w',newline='',encoding='utf8')
