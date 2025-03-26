@@ -23,7 +23,7 @@ for filename in filenames:
         continue
     else:
         print("Fehler beim Lesen der .csv Datei")
-        exit()
+        continue
     reader=csv.DictReader(csvfile)
 
     for zeile in reader:
